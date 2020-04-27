@@ -2,23 +2,23 @@ package com.datahub
 
 //#import
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import akka.actor.ActorSystem
-import akka.http.scaladsl.{ Http, HttpConnectionContext }
-import akka.http.scaladsl.model.{ HttpRequest, HttpResponse }
+import akka.http.scaladsl.{Http, HttpConnectionContext}
+import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.UseHttp2.Always
-import akka.stream.{ ActorMaterializer, Materializer }
+import akka.stream.{ActorMaterializer, Materializer}
 import com.typesafe.config.ConfigFactory
 
 //#import
-
 
 //#server
 object GreeterServer {
 
   def main(args: Array[String]): Unit = {
     // important to enable HTTP/2 in ActorSystem's config
-    val conf = ConfigFactory.parseString("akka.http.server.preview.enable-http2 = on")
+    val conf = ConfigFactory
+      .parseString("akka.http.server.preview.enable-http2 = on")
       .withFallback(ConfigFactory.defaultApplication())
     val system: ActorSystem = ActorSystem("HelloWorld", conf)
     new GreeterServer(system).run()
@@ -28,8 +28,8 @@ object GreeterServer {
 class GreeterServer(system: ActorSystem) {
 
   def run(): Future[Http.ServerBinding] = {
-    implicit val sys = system
-    implicit val mat: Materializer = ActorMaterializer()
+    implicit val sys                  = system
+    implicit val mat: Materializer    = ActorMaterializer()
     implicit val ec: ExecutionContext = sys.dispatcher
 
     val service: HttpRequest => Future[HttpResponse] =

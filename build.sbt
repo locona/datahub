@@ -8,9 +8,8 @@ val avroVersion = "1.8.2"
 ThisBuild / parallelExecution := false
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-lazy val akkaVersion = "2.6.4"
+lazy val akkaVersion     = "2.6.4"
 lazy val akkaGrpcVersion = "0.8.4"
-
 
 // common setting
 lazy val commonSettings = Seq(
@@ -26,9 +25,22 @@ lazy val commonSettings = Seq(
   addCompilerPlugin(scalafixSemanticdb), // enable SemanticDB
   scalacOptions ++= List(
     "-deprecation",
-    "-Yrangepos",   // required by SemanticDB compiler plugin
-    "-Ywarn-unused" // required by `RemoveUnused` rule
-  )
+    "-Yrangepos",    // required by SemanticDB compiler plugin
+    "-Ywarn-unused", // required by `RemoveUnused` rule
+    "-Ywarn-unused:imports"
+  ),
+  wartremoverErrors in (Compile, compile) ++= Seq(
+    Wart.ArrayEquals,
+    Wart.AnyVal,
+    Wart.Enumeration,
+    Wart.ExplicitImplicitTypes,
+    Wart.FinalCaseClass,
+    Wart.FinalVal,
+    Wart.LeakingSealed,
+    Wart.Serializable,
+    Wart.Return
+  ),
+  wartremoverExcluded += sourceManaged.value
 )
 
 lazy val `datahub-grpc`: Project = project
@@ -44,11 +56,18 @@ lazy val `datahub-grpc`: Project = project
       (baseDirectory in ThisBuild).value / "version.sbt"
     ),
     libraryDependencies ++= Seq(
-      "org.apache.avro" % "avro" % avroVersion,
-      "com.typesafe.akka" %% "akka-discovery" % akkaVersion,
+      "org.apache.avro"   % "avro"                 % avroVersion,
+      "com.typesafe.akka" %% "akka-discovery"      % akkaVersion,
       "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % "test",
-      "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+      "org.scalatest"     %% "scalatest"           % "3.0.8" % "test"
     )
   )
   .enablePlugins(AkkaGrpcPlugin)
   .enablePlugins(JavaAgent)
+
+addCommandAlias(
+  "check",
+  ";scalafmtCheckAll;scalafmtSbtCheck;compile:scalafix --check;test:scalafix --check"
+)
+addCommandAlias("fmt", ";scalafmtAll;scalafmtSbt")
+addCommandAlias("scalafixAll", ";compile:scalafix;test:scalafix")

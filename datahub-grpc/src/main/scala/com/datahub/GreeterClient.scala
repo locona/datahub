@@ -3,9 +3,9 @@ package com.datahub
 //#import
 import scala.concurrent.duration._
 import scala.concurrent.Future
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
-import akka.{ Done, NotUsed }
+import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
 import akka.grpc.GrpcClientSettings
 import akka.stream.ActorMaterializer
@@ -19,9 +19,11 @@ object GreeterClient {
   def main(args: Array[String]): Unit = {
     implicit val sys = ActorSystem("HelloWorldClient")
     implicit val mat = ActorMaterializer()
-    implicit val ec = sys.dispatcher
+    implicit val ec  = sys.dispatcher
 
-    val client = GreeterServiceClient(GrpcClientSettings.fromConfig("datahub.GreeterService"))
+    val client = GreeterServiceClient(
+      GrpcClientSettings.fromConfig("datahub.GreeterService")
+    )
 
     val names =
       if (args.isEmpty) List("Alice", "Bob")
@@ -58,9 +60,12 @@ object GreeterClient {
           .map(i => HelloRequest(s"$name-$i"))
           .mapMaterializedValue(_ => NotUsed)
 
-      val responseStream: Source[HelloReply, NotUsed] = client.sayHelloToAll(requestStream)
+      val responseStream: Source[HelloReply, NotUsed] =
+        client.sayHelloToAll(requestStream)
       val done: Future[Done] =
-        responseStream.runForeach(reply => println(s"$name got streaming reply: ${reply.message}"))
+        responseStream.runForeach(reply =>
+          println(s"$name got streaming reply: ${reply.message}")
+        )
 
       done.onComplete {
         case Success(_) =>
