@@ -59,7 +59,7 @@ lazy val `datahub-grpc`: Project = project
       "org.apache.avro"   % "avro"                 % avroVersion,
       "com.typesafe.akka" %% "akka-discovery"      % akkaVersion,
       "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % "test",
-      "org.scalatest"     %% "scalatest"           % "3.0.8" % "test"
+      "org.scalatest"     %% "scalatest"           % "3.2.0" % "test"
     )
   )
   .enablePlugins(AkkaGrpcPlugin)
