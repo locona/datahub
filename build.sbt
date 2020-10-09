@@ -8,7 +8,7 @@ val avroVersion = "1.10.0"
 ThisBuild / parallelExecution := false
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-lazy val akkaVersion     = "2.6.9"
+lazy val akkaVersion     = "2.6.10"
 lazy val akkaGrpcVersion = "0.8.4"
 
 // common setting
