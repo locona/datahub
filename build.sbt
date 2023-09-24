@@ -3,7 +3,7 @@ name := "akka-grpc-quickstart-scala"
 version := "1.0"
 
 ThisBuild / turbo := true
-val avroVersion = "1.10.0"
+val avroVersion = "1.11.3"
 
 ThisBuild / parallelExecution := false
 Global / onChangedBuildSource := ReloadOnSourceChanges
