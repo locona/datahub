@@ -13,7 +13,7 @@ lazy val akkaGrpcVersion = "0.8.4"
 
 // common setting
 lazy val commonSettings = Seq(
-  scalaVersion := "2.13.1",
+  scalaVersion := "2.13.13",
   organization := "com.datahub",
   homepage := Some(url("https://github.com/locona/datahub")),
   crossPaths := false,
